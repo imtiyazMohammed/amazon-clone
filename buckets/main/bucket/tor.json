@@ -1,0 +1,60 @@
+{
+    "version": "0.4.5.10",
+    "description": "Enables anonymous communication over the onion network (expert mode).",
+    "homepage": "https://www.torproject.org",
+    "license": "BSD-3-Clause",
+    "notes": [
+        "NOTE: You will need to configure tor before using it, as it does not come pre-configured.",
+        "Please see https://www.torproject.org/docs/tor-manual.html.en for configuration details."
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://dist.torproject.org/torbrowser/10.5.5/tor-win64-0.4.5.10.zip",
+            "hash": "b97141039f4442914f611423e0aa41a3c60a70cdc6040d676a433ad9f3d243f9"
+        },
+        "32bit": {
+            "url": "https://dist.torproject.org/torbrowser/10.5.5/tor-win32-0.4.5.10.zip",
+            "hash": "08fb4439449357d3605d51250871dbeb197f59dbddc35ef4d0c1539184ef664c"
+        }
+    },
+    "pre_install": [
+        "$current = current_dir $dir",
+        "$content = @(",
+        "    \"DataDirectory `\"$current\\Data\\Data`\"\"",
+        "    \"GeoIPFile `\"$current\\Data\\Tor\\geoip`\"\"",
+        "    \"GeoIPv6File `\"$current\\Data\\Tor\\geoip6`\"\"",
+        ")",
+        "if (!(Test-Path \"$persist_dir\\torrc\")) {",
+        "    Add-Content \"$dir\\torrc\" $content.Replace('\\', '/') -Encoding ASCII -Force",
+        "}"
+    ],
+    "bin": [
+        [
+            "Tor\\tor.exe",
+            "tor",
+            "-f \"$dir\\torrc\""
+        ],
+        "Tor\\tor-gencert.exe"
+    ],
+    "persist": [
+        "Data\\Data",
+        "torrc"
+    ],
+    "checkver": {
+        "url": "https://www.torproject.org/download/tor/",
+        "regex": "torbrowser/(?<browser>[\\d.]+)/tor-win32-(?<version>[\\d.]+)\\.zip"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://dist.torproject.org/torbrowser/$matchBrowser/tor-win64-$version.zip"
+            },
+            "32bit": {
+                "url": "https://dist.torproject.org/torbrowser/$matchBrowser/tor-win32-$version.zip"
+            }
+        },
+        "hash": {
+            "url": "$baseurl/sha256sums-signed-build.txt"
+        }
+    }
+}

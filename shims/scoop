@@ -1,0 +1,2 @@
+#!/bin/sh
+powershell.exe -noprofile -ex unrestricted "D:\Projects\React CLONE Projects\Amazon Clone - React, Redux, Stripe, Firebase, NextJS, Tailwind\amazon-clone\apps\scoop\current\bin\scoop.ps1"  "$@"
